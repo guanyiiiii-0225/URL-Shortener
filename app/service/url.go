@@ -6,13 +6,12 @@ import (
 	"time"
 )
 
-var UrlFields = []string{"id", "originURL", "expiredDate", "shortenURL"}
+var UrlFields = []string{"id", "origin_URL", "expired_Date"}
 
-func AddUrl(originURL string) (*model.Url, error){
+func AddUrl(origin_URL string) (*model.Url, error){
 	url := &model.Url{
-		OriginURL:   originURL,
-		ExpiredDate: time.Now(),
-		ShortenURL:  "12345",
+		Origin_URL:   origin_URL,
+		Expired_Date: time.Now(),
 	}
 	err := persistence.SqlSession.Model(&model.Url{}).Create(&url).Error
 	if err != nil {

@@ -6,6 +6,7 @@ import (
 	"example.com/url/app/service"
 	"strconv"
 	"fmt"
+	"github.com/pkg/browser"
 )
 
 type UrlController struct{}
@@ -19,8 +20,9 @@ func QueryUrlController() UrlController {
 }
 
 type AddUrlInput struct {
-	OriginURL    string `json:"originURL" binding:"required" example:"originURL"`
+	Origin_URL    string `json:"origin_URL" binding:"required" example:"origin_URL"`
 }
+
 
 // AddUrl @Summary
 // @Tags Url
@@ -39,7 +41,7 @@ func (u UrlController) AddUrl(c *gin.Context) {
 	// catch bind json error
 	if bindErr == nil {
 		// call AddUrl function from service
-		url, err := service.AddUrl(form.OriginURL)
+		url, err := service.AddUrl(form.Origin_URL)
 		// catch AddUrl error
 		if err == nil {
 			shortUrl := fmt.Sprintf("%s%d", "http://localhost:8080/url/", url.ID)
@@ -74,6 +76,9 @@ func (u UrlController) AddUrl(c *gin.Context) {
 // @Router /url/{url_id} [get]
 func (u UrlController) QueryUrl(c *gin.Context) {
 	id := c.Params.ByName("url_id")
+	// debug
+	fmt.Printf("id: %v\n", id)
+	// fmt.Printf("c: %v\n", &c)
 	fmt.Printf("%v\n", c.Params)
 	urlId, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
@@ -91,9 +96,12 @@ func (u UrlController) QueryUrl(c *gin.Context) {
 			"error":   err.Error(),
 		})
 	} else {
+		browser.OpenURL(url.Origin_URL)
 		c.JSON(http.StatusOK, gin.H{
 			"success": true,
-			"data":    url,
+			"id": url.ID,
+			"origin_URL": url.Origin_URL,
+			"expired_Date": url.Expired_Date,
 			"error":   nil,
 		})
 	}

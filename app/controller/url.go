@@ -77,9 +77,9 @@ func (u UrlController) AddUrl(c *gin.Context) {
 func (u UrlController) QueryUrl(c *gin.Context) {
 	id := c.Params.ByName("url_id")
 	// debug
-	fmt.Printf("id: %v\n", id)
-	// fmt.Printf("c: %v\n", &c)
-	fmt.Printf("%v\n", c.Params)
+	// fmt.Printf("id: %v\n", id)
+	// fmt.Printf("%v\n", c.Params)
+	
 	urlId, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
@@ -90,9 +90,8 @@ func (u UrlController) QueryUrl(c *gin.Context) {
 	}
 	url, err := service.QueryUrl(urlId)
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusNotFound, gin.H{
 			"success": false,
-			"data":    nil,
 			"error":   err.Error(),
 		})
 	} else {

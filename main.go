@@ -2,12 +2,12 @@ package main
 
 import (
 	"github.com/joho/godotenv"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 	_"fmt"
 	_"log"
     "os"
 	"example.com/url/app/model"
+	"example.com/url/app/persistence"
+	"example.com/url/app/config"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -21,15 +21,18 @@ func main() {
 	username := os.Getenv("PG_USERNAME")
 	password := os.Getenv("PG_PASSWORD")
 	dbName := os.Getenv("PG_DBNAME")
-	dbConfig := "host=" + host + " port=" + port + " user=" + username + " password=" + password + " dbname=" + dbName
-	db, err := gorm.Open(postgres.Open(dbConfig), &gorm.Config{})
-	handleErr(err)
+	db, ormErr := persistence.Initialize(host, port, username, password, dbName)
+	handleErr(ormErr)
+	// dbConfig := "host=" + host + " port=" + port + " user=" + username + " password=" + password + " dbname=" + dbName
+	// db, err := gorm.Open(postgres.Open(dbConfig), &gorm.Config{})
+	// handleErr(err)
 
 	migrateErr := db.AutoMigrate(&model.Url{})
 	handleErr(migrateErr)
 
 	router := gin.Default()
 	router.GET("/test", test)
+	config.RouteUrls(router)
 	router.Run("localhost:8080")
 }
 

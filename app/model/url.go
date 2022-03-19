@@ -13,7 +13,7 @@ type Url struct {
 	ShortenURL string    `gorm:"not null" json:"shortenURL"`
 }
 
-// CREATE TABLE URL
+// CREATE TABLE URLS	
 // (
 // 	ID serial PRIMARY KEY,
 // 	OriginalURL varchar not null,

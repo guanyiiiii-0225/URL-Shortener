@@ -43,7 +43,7 @@ func (u UrlController) AddUrl(c *gin.Context) {
 		url, err := service.AddUrl(form.Origin_URL, form.Expired_Date)
 		// catch AddUrl error
 		if err == nil {
-			shortUrl := fmt.Sprintf("%s%d", "http://localhost:8080/url/", url.ID)
+			shortUrl := fmt.Sprintf("%s%d", "http://localhost:8080/", url.ID)
 			c.JSON(http.StatusOK, gin.H{
 				"status": "success",
 				"id":    url.ID,

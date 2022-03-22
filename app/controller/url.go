@@ -34,8 +34,8 @@ func (u UrlController) AddUrl(c *gin.Context) {
 	var form AddUrlInput
 	bindErr := c.BindJSON(&form)
 	// debug
-	fmt.Printf("form: %v\n", form)
-	fmt.Printf("c: %v\n", &c)
+	// fmt.Printf("form: %v\n", form)
+	// fmt.Printf("c: %v\n", &c)
 	
 	// catch bind json error
 	if bindErr == nil {
@@ -50,17 +50,16 @@ func (u UrlController) AddUrl(c *gin.Context) {
 				"shortUrl": shortUrl,
 			})
 		} else {
-			c.JSON(http.StatusOK, gin.H{
-				"status": "fail",
-				"data":    nil,
+			c.JSON(http.StatusBadRequest, gin.H{
+				"status": "failed",
 				"error":   err.Error(),
 			})
 		}
 	} else {
-		c.JSON(http.StatusOK, gin.H{
-			"status": "fail",
-			"data":    nil,
-			"error":   bindErr.Error(),
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": "failed",
+			"error":  bindErr.Error(),
+			"msg": "Input field incorrect.",
 		})
 	}
 }
@@ -80,33 +79,25 @@ func (u UrlController) QueryUrl(c *gin.Context) {
 	
 	urlId, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"status": "fail",
-			"error":   err.Error(),
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": "failed",
+			"error":  "url_id should be integer.", //err.Error(), 
 		})
+		return 
 	}
 	url, err := service.QueryUrl(urlId)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
-			"status": "fail",
-			"error":   err.Error(),
+			"status": "failed",
+			"error":  "Non-existent shorten URL.",  //err.Error(),
 		})
 	} else {
 		today := time.Now()
 		if today.Before(url.Expired_Date) == true {
-			// http.Handle("/", http.RedirectHandler(url.Origin_URL, 200))
-			// browser.OpenURL(url.Origin_URL)
 			c.Redirect(http.StatusMovedPermanently, url.Origin_URL)
-			// c.JSON(http.StatusOK, gin.H{
-			// 	"status": "success",
-			// 	"id": url.ID,
-			// 	"origin_URL": url.Origin_URL,
-			// 	"expired_Date": url.Expired_Date,
-			// })
-			// c.JSON(http.StatusOK, gin.H{})
 		} else {
 			c.JSON(http.StatusNotFound, gin.H{
-				"status": "fail",
+				"status": "failed",
 				"msg": "URL is expired.",
 			})
 		}

@@ -11,10 +11,3 @@ type Url struct {
 	Origin_URL    string    `gorm:"not null" json:"origin_URL"`
 	Expired_Date time.Time `gorm:"not null" json:"expired_Date"`
 }
-
-// CREATE TABLE URLS	
-// (
-// 	ID serial PRIMARY KEY,
-// 	OriginalURL varchar not null,
-// 	ExpiredDate TIMESTAMP
-// )

@@ -2,8 +2,6 @@ package main
 
 import (
 	"github.com/joho/godotenv"
-	"fmt"
-	_"log"
     "os"
 	"URL-Shortener/app/model"
 	"URL-Shortener/app/persistence"
@@ -23,19 +21,13 @@ func main() {
 	dbName := os.Getenv("PG_DBNAME")
 	db, ormErr := persistence.Initialize(host, port, username, password, dbName)
 	handleErr(ormErr)
-	// dbConfig := "host=" + host + " port=" + port + " user=" + username + " password=" + password + " dbname=" + dbName
-	// db, err := gorm.Open(postgres.Open(dbConfig), &gorm.Config{})
-	// handleErr(err)
-
-	// db.Migrator().HasTable(&User{})
-	fmt.Printf("exists or not: %v\n", db.Migrator().HasTable(&model.Url{}))
 	migrateErr := db.AutoMigrate(&model.Url{})
 	handleErr(migrateErr)
 
 	router := gin.Default()
 	router.GET("/test", test)
 	config.RouteUrls(router)
-	router.Run("localhost:8080")
+	router.Run(os.Getenv("DOMAIN"))
 }
 
 func handleErr(err error) {

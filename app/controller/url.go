@@ -9,6 +9,7 @@ import (
 	_"github.com/pkg/browser"
 	"time"
 	_"log"
+	"os"
 )
 
 type UrlController struct{}
@@ -37,7 +38,7 @@ func (u UrlController) AddUrl(c *gin.Context) {
 	if bindErr == nil { // catch bind json error
 		url, err := service.AddUrl(form.Origin_URL, form.Expired_Date)
 		if err == nil { // catch AddUrl error
-			shortUrl := fmt.Sprintf("%s%d", "http://localhost:8080/", url.ID)
+			shortUrl := fmt.Sprintf("%s%s%s%d", "http://", os.Getenv("DOMAIN"), "/", url.ID)
 			c.JSON(http.StatusOK, gin.H{
 				"status": "success",
 				"id":    url.ID,

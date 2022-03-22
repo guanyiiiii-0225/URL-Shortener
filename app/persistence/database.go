@@ -13,17 +13,10 @@ func Initialize(host string, port string, username string, password string, dbNa
 	var err error
 	SqlSession, err = gorm.Open(postgres.Open(dbConfig), &gorm.Config{})
 
-	// Get generic database object sql.DB to use its functions
-	sqlDB, err := SqlSession.DB()
-
-	// SetMaxIdleConns sets the maximum number of connections in the idle connection pool.
-	sqlDB.SetMaxIdleConns(10)
-
-	// SetMaxOpenConns sets the maximum number of open connections to the database.
-	sqlDB.SetMaxOpenConns(100)
-
-	// SetConnMaxLifetime sets the maximum amount of time a connection may be reused.
-	sqlDB.SetConnMaxLifetime(time.Hour)
+	sqlDB, err := SqlSession.DB() // Get generic database object sql.DB to use its functions	
+	sqlDB.SetMaxIdleConns(10) // SetMaxIdleConns sets the maximum number of connections in the idle connection pool.	
+	sqlDB.SetMaxOpenConns(100) // SetMaxOpenConns sets the maximum number of open connections to the database.
+	sqlDB.SetConnMaxLifetime(time.Hour)// SetConnMaxLifetime sets the maximum amount of time a connection may be reused.
 
 	return SqlSession, err
 }

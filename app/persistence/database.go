@@ -5,9 +5,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var (
-	SqlSession *gorm.DB
-)
+var SqlSession *gorm.DB
 
 func Initialize(host string, port string, username string, password string, dbName string) (*gorm.DB, error) {
 	dbConfig := "host=" + host + " port=" + port + " user=" + username + " password=" + password + " dbname=" + dbName

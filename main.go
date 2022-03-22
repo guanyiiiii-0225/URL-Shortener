@@ -2,12 +2,12 @@ package main
 
 import (
 	"github.com/joho/godotenv"
-	_"fmt"
+	"fmt"
 	_"log"
     "os"
-	"example.com/url/app/model"
-	"example.com/url/app/persistence"
-	"example.com/url/app/config"
+	"URL-Shortener/app/model"
+	"URL-Shortener/app/persistence"
+	"URL-Shortener/app/config"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -27,6 +27,8 @@ func main() {
 	// db, err := gorm.Open(postgres.Open(dbConfig), &gorm.Config{})
 	// handleErr(err)
 
+	// db.Migrator().HasTable(&User{})
+	fmt.Printf("exists or not: %v\n", db.Migrator().HasTable(&model.Url{}))
 	migrateErr := db.AutoMigrate(&model.Url{})
 	handleErr(migrateErr)
 

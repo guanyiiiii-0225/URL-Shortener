@@ -1,4 +1,4 @@
-module example.com/url
+module URL-Shortener
 
 go 1.17
 
@@ -7,7 +7,7 @@ require (
 	github.com/joho/godotenv v1.4.0
 	github.com/pkg/browser v0.0.0-20210911075715-681adbf594b8
 	gorm.io/driver/postgres v1.3.1
-	gorm.io/gorm v1.23.2
+	gorm.io/gorm v1.23.3
 )
 
 require (

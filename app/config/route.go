@@ -2,14 +2,14 @@ package config
 
 import (
 	"github.com/gin-gonic/gin"
-	"example.com/url/app/controller"
+	"URL-Shortener/app/controller"
 )
 
 func RouteUrls(r *gin.Engine) {
-	urls := r.Group("/url")
+	urls := r.Group("")
 	{
-		urls.POST("", controller.AddUrlController().AddUrl)
-		urls.GET("/:url_id", controller.QueryUrlController().QueryUrl)
+		urls.POST("/api/v1/urls", controller.Url_Controller().AddUrl)
+		urls.GET("/:url_id", controller.Url_Controller().QueryUrl)
 	}
 }
 

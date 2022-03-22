@@ -33,17 +33,10 @@ type AddUrlInput struct {
 func (u UrlController) AddUrl(c *gin.Context) {
 	var form AddUrlInput
 	bindErr := c.BindJSON(&form)
-	// debug
-	// fmt.Printf("form: %v\n", form)
-	// fmt.Printf("c: %v\n", &c)
 	
-	// catch bind json error
-	if bindErr == nil {
-		// call AddUrl function from service
+	if bindErr == nil { // catch bind json error
 		url, err := service.AddUrl(form.Origin_URL, form.Expired_Date)
-		
-		// catch AddUrl error
-		if err == nil {
+		if err == nil { // catch AddUrl error
 			shortUrl := fmt.Sprintf("%s%d", "http://localhost:8080/", url.ID)
 			c.JSON(http.StatusOK, gin.H{
 				"status": "success",
@@ -74,33 +67,25 @@ func (u UrlController) AddUrl(c *gin.Context) {
 // @Router /{url_id} [get]
 func (u UrlController) QueryUrl(c *gin.Context) {
 	id := c.Params.ByName("url_id")
-	// debug
-	// fmt.Printf("id: %v\n", id)
-	// fmt.Printf("%v\n", c.Params)
 	
-	urlId, err := strconv.ParseInt(id, 10, 64)
-	// check input is integer or not
-	if err != nil {
+	urlId, err := strconv.ParseInt(id, 10, 64) // check input is integer or not
+	if err != nil { 
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status": "failed",
-			"error":  "url_id should be integer.", //err.Error(), 
+			"error":  "url_id should be integer.", // err.Error()
 		})
 		return 
 	}
 
-	// call QueryUrl function from service 
-	url, err := service.QueryUrl(urlId)
-
-	// check shorten URL is exist or not
-	if err != nil {
+	url, err := service.QueryUrl(urlId) 
+	if err != nil { // check shorten URL is exist or not
 		c.JSON(http.StatusNotFound, gin.H{
 			"status": "failed",
 			"error":  "Non-existent shorten URL.",  //err.Error(),
 		})
 	} else {
 		today := time.Now()
-		// compare today and the expired date
-		if today.Before(url.Expired_Date) == true {
+		if today.Before(url.Expired_Date) == true { // compare today and the expired date
 			c.Redirect(http.StatusMovedPermanently, url.Origin_URL)
 		} else {
 			c.JSON(http.StatusNotFound, gin.H{
